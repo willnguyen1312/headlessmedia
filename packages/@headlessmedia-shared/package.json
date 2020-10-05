@@ -1,0 +1,28 @@
+{
+  "name": "@headlessmedia/shared",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/headlessmedia.esm.js",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willnguyen1312/headlessmedia.git",
+    "directory": "packages/@headlessmedia-shared"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "playground": "tsdx watch --name headlessmedia",
+    "build": "../../scripts/build.sh",
+    "test": "../../scripts/test.sh",
+    "lint": "../../scripts/lint.sh"
+  }
+}
