@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "description": "Headless Media libraries for various frameworks like React and Vue",
   "main": "index.js",
+  "author": {
+    "name": "Nam Nguyen",
+    "email": "nam.nguyen.node@gmail.com",
+    "url": "https://namnguyen.design/"
+  },
   "repository": "https://github.com/willnguyen1312/headlessmedia",
   "license": "MIT",
   "private": true,
