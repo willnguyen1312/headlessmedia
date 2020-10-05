@@ -1,0 +1,41 @@
+{
+  "name": "@headlessmedia/react",
+  "version": "0.1.3",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/headlessmedia.esm.js",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willnguyen1312/headlessmedia.git",
+    "directory": "packages/@headlessmedia-react"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "playground": "vite serve playground",
+    "playground:build": "NODE_ENV=production vite build playground",
+    "prepublishOnly": "npm run build",
+    "build": "../../scripts/build.sh",
+    "test": "../../scripts/test.sh",
+    "lint": "../../scripts/lint.sh"
+  },
+  "dependencies": {
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "typescript": "^3.9.3",
+    "vite": "^1.0.0-rc.1",
+    "vite-plugin-react": "^3.0.0"
+  }
+}
