@@ -1,6 +1,6 @@
 {
   "name": "@headlessmedia/react",
-  "version": "0.1.3",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/headlessmedia.esm.js",
