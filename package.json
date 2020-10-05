@@ -28,7 +28,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "tsdx lint"
+    "*.{js,jsx,ts,tsx}": "tsdx lint --fix"
   },
   "prettier": {
     "printWidth": 100,
