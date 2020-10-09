@@ -3,7 +3,7 @@ import { onUnmounted } from 'vue'
 import { callAll } from '@headlessmedia/shared'
 
 import { MediaStatus } from '../constant'
-import { mediaStore } from '../MediaStore'
+import { pubsubs } from '../MediaStore'
 
 const noop = () => {}
 
@@ -30,7 +30,7 @@ export type MergedEventListeners = Record<MediaContextInternalEvents, ReturnType
 
 export const useMedia = ({ id }: UseMediaArg) => {
   let timeoutLoadingId: NodeJS.Timeout
-  const { update, remove, getState } = mediaStore
+  const { update, remove, getState } = pubsubs
   const getMedia = () => getState(id)?.mediaElement
 
   const _onLoadedMetadata = (event: Event) => {
@@ -42,15 +42,22 @@ export const useMedia = ({ id }: UseMediaArg) => {
 
   const _onError = () => update(id, { status: MediaStatus.ERROR })
 
-  const _onTimeUpdate = () => update(id, { currentTime: getMedia()?.currentTime })
+  const _onTimeUpdate = () => {
+    update(id, { currentTime: getMedia()?.currentTime })
+  }
 
   const _onRateChange = () => update(id, { playbackRate: getMedia()?.playbackRate })
 
   const _onPause = () => update(id, { paused: true, ended: getMedia()?.ended })
 
-  const _onPlay = () => update(id, { paused: false, ended: getMedia()?.ended })
+  const _onPlay = () => {
+    update(id, { paused: false, ended: getMedia()?.ended })
+  }
 
-  const _onDurationChange = () => update(id, { duration: getMedia()?.duration })
+  const _onDurationChange = (event: Event) => {
+    const mediaElement = event.target as HTMLMediaElement
+    update(id, { duration: mediaElement.duration })
+  }
 
   const checkMediaHasDataToPlay = () => {
     const media = getMedia()

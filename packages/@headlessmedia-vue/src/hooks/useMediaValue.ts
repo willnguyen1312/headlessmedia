@@ -1,7 +1,7 @@
-import { ref, reactive, watchEffect } from 'vue'
+import { ref, reactive, toRefs } from 'vue'
 import { clamp } from '@headlessmedia/shared'
 
-import { mediaStore, MediaState } from '../MediaStore'
+import { pubsubs, initialMediaState } from '../MediaStore'
 
 export interface UseMediaValueArg {
   id: string
@@ -16,15 +16,24 @@ export interface UseMediaValueUtils {
 }
 
 export const useMediaValue = ({ id }: { id: string }) => {
-  const { getState } = mediaStore
+  const { getState, subscribe } = pubsubs
   const getMedia = () => getState(id)?.mediaElement
-  const mediaState = reactive(new Map<string, MediaState>())
+  const currentMediaState = reactive(initialMediaState)
   const pausedRef = ref<boolean>(true)
   const playPromiseRef = ref<Promise<void>>()
 
-  watchEffect(() => {
-    // mediaState.set(id, getState(id) as MediaState)
-    console.log(getState(id))
+  subscribe(id, latestState => {
+    Object.keys(latestState).forEach(key => {
+      // @ts-ignore
+      // if (key === 'paused') {
+      //   console.log(latestState.paused)
+      // }
+
+      // @ts-ignore
+      currentMediaState[key] = latestState[key]
+    })
+
+    // console.log(currentMediaState.paused)
   })
 
   const setCurrentTime = (currentTime: number) => {
@@ -89,7 +98,12 @@ export const useMediaValue = ({ id }: { id: string }) => {
   }
 
   return {
-    ...(mediaState.get(id) as MediaState),
+    // ...toRefs(currentMediaState),
+    // mediaState: toRefs(currentMediaState),
+    // paused,
+    ...toRefs(currentMediaState),
+
+    // Utils
     setCurrentTime,
     setMuted,
     setPaused,

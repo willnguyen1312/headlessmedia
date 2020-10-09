@@ -1,5 +1,7 @@
 <template>
   <button @click="handleClick">{{ buttonText }}</button>
+  <h6>Current time: {{ currentTime }}</h6>
+  <h6>Paused: {{ paused }}</h6>
 </template>
 
 <script lang="ts">
@@ -11,13 +13,13 @@ import { mediaId } from '../const'
 export default defineComponent({
   name: 'Control',
   setup() {
-    const { paused, setPaused } = useMediaValue({ id: mediaId })
+    const { paused, setPaused, currentTime } = useMediaValue({ id: mediaId })
 
-    const buttonText = computed(() => (paused ? 'Play' : 'Pause'))
+    const buttonText = computed(() => (paused.value ? 'Play' : 'Pause'))
 
-    const handleClick = () => setPaused(!paused)
+    const handleClick = () => setPaused(!paused.value)
 
-    return { paused, buttonText, handleClick }
+    return { buttonText, paused, handleClick, currentTime }
   },
 })
 </script>

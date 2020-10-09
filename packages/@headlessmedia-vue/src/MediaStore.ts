@@ -1,8 +1,7 @@
-import { reactive } from '@vue/reactivity'
-
 import { BitrateInfo } from './types'
-import { MediaStatus, DEFAULT_AUTO_BITRATE_INDEX } from './constant'
 
+// import { MediaStatus } from './constant'
+import { DEFAULT_AUTO_BITRATE_INDEX, MediaStatus } from './constant'
 export interface MediaState {
   mediaElement: HTMLMediaElement | null
   currentTime: number
@@ -24,7 +23,9 @@ export interface MediaState {
   currentBirateIndex: number
 }
 
-const initialMediaState: MediaState = {
+type Subcriber = (mediaState: MediaState) => void
+
+export const initialMediaState: MediaState = {
   mediaElement: null,
   currentTime: 0,
   duration: 0,
@@ -43,28 +44,63 @@ const initialMediaState: MediaState = {
   currentBirateIndex: DEFAULT_AUTO_BITRATE_INDEX,
 }
 
-export const mediaStore = (() => {
-  const channels = reactive(new Map<string, MediaState>())
+export const pubsubs = (() => {
+  const channels = new Map<string, { state: MediaState; listeners: Set<Subcriber> }>()
 
   const createChannelIfNotAvailable = (channel: string) => {
     if (!channels.has(channel)) {
-      channels.set(channel, initialMediaState)
+      channels.set(channel, {
+        state: {
+          mediaElement: null,
+          currentTime: 0,
+          duration: 0,
+          ended: false,
+          error: '',
+          muted: false,
+          paused: true,
+          playbackRate: 1,
+          rotate: 0,
+          seeking: false,
+          status: MediaStatus.LOADING,
+          volume: 1,
+          buffered: null,
+          autoBitrateEnabled: true,
+          bitrateInfos: [],
+          currentBirateIndex: DEFAULT_AUTO_BITRATE_INDEX,
+        },
+        listeners: new Set(),
+      })
     }
   }
 
   return {
-    getState: (channel: string) => {
+    subscribe: (channel: string, listener: Subcriber) => {
+      // Create the channel if not yet created
       createChannelIfNotAvailable(channel)
-      return channels.get(channel)
-    },
-    remove: (channel: string) => {
-      channels.delete(channel)
+
+      // Add the listener to queue
+      channels.get(channel)?.listeners.add(listener)
+
+      // Provide handle back for removal of channel
+      return {
+        unsubscribe: () => {
+          channels.get(channel)?.listeners.delete(listener)
+        },
+      }
     },
     update: (channel: string, partialMediaState: Partial<MediaState>) => {
       createChannelIfNotAvailable(channel)
-      console.log(partialMediaState)
-
-      channels.set(channel, { ...(channels.get(channel) as MediaState), ...partialMediaState })
+      const currentState = Object.assign(channels.get(channel)?.state, partialMediaState)
+      channels.get(channel)?.listeners.forEach(channelListener => {
+        channelListener(currentState)
+      })
+    },
+    getState: (channel: string) => {
+      createChannelIfNotAvailable(channel)
+      return channels.get(channel)?.state
+    },
+    remove: (channel: string) => {
+      channels.delete(channel)
     },
   }
 })()
