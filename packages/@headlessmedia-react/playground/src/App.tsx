@@ -1,38 +1,46 @@
 import React from 'react'
 import { useMedia, useMediaValue } from '@headlessmedia/react'
 
+import styles from './App.module.css'
+
 const mediaID = 'tadatada'
 
-const Child = () => {
+const Control = () => {
   const { currentTime, setPaused, paused } = useMediaValue({
     id: mediaID,
-    selector: mediaContext => mediaContext,
+    selector: ({ currentTime, paused }) => ({ currentTime, paused }),
   })
 
+  const togglePlay = () => setPaused(!paused)
+
   return (
-    <div
-      style={{ display: 'flex', alignItems: 'center', width: 600, justifyContent: 'space-between' }}
-    >
+    <div className={styles.buttonWrapper}>
       <h1>Current time: {currentTime}</h1>
-      <button onClick={() => setPaused(!paused)}>{paused ? 'Play' : 'Pause'}</button>
+      <button onClick={togglePlay}>{paused ? 'Play' : 'Pause'}</button>
     </div>
   )
 }
 
-const App = () => {
+const Video = () => {
   const { getMediaProps } = useMedia({ id: mediaID })
   return (
-    <div>
-      <Child />
+    <video
+      onLoadedMetadata={event => {}}
+      width={800}
+      height={400}
+      {...getMediaProps()}
+      controls
+      src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    />
+  )
+}
+
+const App = () => {
+  return (
+    <div className={styles.wrapper}>
+      <Control />
       <h1>Hello Media</h1>
-      <video
-        onLoadedMetadata={event => {}}
-        width={800}
-        height={400}
-        {...getMediaProps()}
-        controls
-        src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-      />
+      <Video />
     </div>
   )
 }
