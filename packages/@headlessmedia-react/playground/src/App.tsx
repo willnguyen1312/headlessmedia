@@ -1,28 +1,45 @@
-import React, { useState } from 'react'
-import './App.css'
+import React from 'react'
+import { useMedia, useMediaValue } from '@headlessmedia/react'
 
-function App() {
-  const [count, setCount] = useState(0)
+import styles from './App.module.css'
+
+const mediaID = 'tadatada'
+
+const Control = () => {
+  const { currentTime, setPaused, paused } = useMediaValue({
+    id: mediaID,
+    selector: ({ currentTime, paused }) => ({ currentTime, paused }),
+  })
+
+  const togglePlay = () => setPaused(!paused)
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Hello Vite + React!</p>
-        <p>
-          <button onClick={() => setCount(count => count + 1)}>count is: {count}</button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.buttonWrapper}>
+      <h1>Current time: {currentTime}</h1>
+      <button onClick={togglePlay}>{paused ? 'Play' : 'Pause'}</button>
+    </div>
+  )
+}
+
+const Video = () => {
+  const { getMediaProps } = useMedia({ id: mediaID })
+  return (
+    <video
+      width={800}
+      height={400}
+      {...getMediaProps()}
+      controls
+      src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    />
+  )
+}
+
+const App = () => {
+  return (
+    <div className={styles.wrapper}>
+      <Control />
+      <h1>Hello Media</h1>
+      <Video />
     </div>
   )
 }
