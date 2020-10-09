@@ -1,1 +1,1 @@
-export const mediaId = 'takada'
+export const mediaId = 'wakanda'
