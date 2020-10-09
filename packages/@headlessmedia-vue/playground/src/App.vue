@@ -1,17 +1,18 @@
 <template>
-  <h1>Hello there</h1>
+  <Control />
+  <Video />
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue'
-import { getTen } from '@headlessmedia/shared'
+import { useMedia } from '@headlessmedia/vue'
+
+import Control from './components/Control.vue'
+import Video from './components/Video.vue'
+
+import { mediaId } from './const'
 
 export default defineComponent({
-  name: 'App',
-  setup() {
-    // const value = getTen()
-    console.log(getTen())
-    // return { value }
-  },
+  components: { Control, Video },
 })
 </script>

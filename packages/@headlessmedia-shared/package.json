@@ -20,7 +20,7 @@
     "access": "public"
   },
   "scripts": {
-    "playground": "tsdx watch --name headlessmedia",
+    "watch": "tsdx watch --name headlessmedia",
     "build": "../../scripts/build.sh",
     "test": "../../scripts/test.sh",
     "lint": "../../scripts/lint.sh"

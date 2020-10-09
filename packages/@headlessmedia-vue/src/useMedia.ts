@@ -1,36 +1,36 @@
-import { MediaHTMLAttributes, SyntheticEvent, useEffect } from 'react'
+import { onUnmounted } from 'vue'
 
-import { MediaStatus } from '../constants'
-import { callAll } from '../utils'
-import { pubsubs } from '../MediaPubSub'
+import { callAll, MediaStatus, mediaStore } from '@headlessmedia/shared'
+
+const noop = () => {}
+
+type MediaContextInternalEvents =
+  | 'seeking'
+  | 'seeked'
+  | 'ratechange'
+  | 'volumechange'
+  | 'canplay'
+  | 'waiting'
+  | 'pause'
+  | 'play'
+  | 'timeupdate'
+  | 'progress'
+  | 'durationchange'
+  | 'loadedmetadata'
+  | 'error'
 
 export interface UseMediaArg {
   id: string
 }
 
-type MediaContextInternalEvents =
-  | 'onSeeking'
-  | 'onSeeked'
-  | 'onRateChange'
-  | 'onVolumeChange'
-  | 'onCanPlay'
-  | 'onWaiting'
-  | 'onPause'
-  | 'onPlay'
-  | 'onTimeUpdate'
-  | 'onProgress'
-  | 'onDurationChange'
-  | 'onLoadedMetadata'
-  | 'onError'
-
 export type MergedEventListeners = Record<MediaContextInternalEvents, ReturnType<typeof callAll>>
 
 export const useMedia = ({ id }: UseMediaArg) => {
   let timeoutLoadingId: NodeJS.Timeout
-  const { update, remove, getState } = pubsubs
+  const { update, remove, getState } = mediaStore
   const getMedia = () => getState(id)?.mediaElement
 
-  const _onLoadedMetadata = (event: SyntheticEvent<HTMLMediaElement, Event>) => {
+  const _onLoadedMetadata = (event: Event) => {
     const mediaElement = event.target as HTMLMediaElement
     update(id, { mediaElement })
   }
@@ -39,15 +39,22 @@ export const useMedia = ({ id }: UseMediaArg) => {
 
   const _onError = () => update(id, { status: MediaStatus.ERROR })
 
-  const _onTimeUpdate = () => update(id, { currentTime: getMedia()?.currentTime })
+  const _onTimeUpdate = () => {
+    update(id, { currentTime: getMedia()?.currentTime })
+  }
 
   const _onRateChange = () => update(id, { playbackRate: getMedia()?.playbackRate })
 
   const _onPause = () => update(id, { paused: true, ended: getMedia()?.ended })
 
-  const _onPlay = () => update(id, { paused: false, ended: getMedia()?.ended })
+  const _onPlay = () => {
+    update(id, { paused: false, ended: getMedia()?.ended })
+  }
 
-  const _onDurationChange = () => update(id, { duration: getMedia()?.duration })
+  const _onDurationChange = (event: Event) => {
+    const mediaElement = event.target as HTMLMediaElement
+    update(id, { duration: mediaElement.duration })
+  }
 
   const checkMediaHasDataToPlay = () => {
     const media = getMedia()
@@ -120,44 +127,42 @@ export const useMedia = ({ id }: UseMediaArg) => {
   }
 
   const getMediaProps = ({
-    onCanPlay,
-    onDurationChange,
-    onError,
-    onPause,
-    onPlay,
-    onProgress,
-    onRateChange,
-    onSeeked,
-    onSeeking,
-    onTimeUpdate,
-    onVolumeChange,
-    onWaiting,
-    onLoadedMetadata,
-  }: MediaHTMLAttributes<HTMLMediaElement> = {}) => {
+    canplay = noop,
+    durationchange = noop,
+    error = noop,
+    pause = noop,
+    play = noop,
+    progress = noop,
+    ratechange = noop,
+    seeked = noop,
+    seeking = noop,
+    timeupdate = noop,
+    volumechange = noop,
+    waiting = noop,
+    loadedmetadata = noop,
+  } = {}) => {
     const mergedEventListeners: MergedEventListeners = {
-      onCanPlay: callAll(_onCanPlay, onCanPlay),
-      onDurationChange: callAll(_onDurationChange, onDurationChange),
-      onError: callAll(_onError, onError),
-      onPause: callAll(_onPause, onPause),
-      onPlay: callAll(_onPlay, onPlay),
-      onProgress: callAll(_onProgress, onProgress),
-      onRateChange: callAll(_onRateChange, onRateChange),
-      onSeeked: callAll(_onSeeked, onSeeked),
-      onSeeking: callAll(_onSeeking, onSeeking),
-      onTimeUpdate: callAll(_onTimeUpdate, onTimeUpdate),
-      onVolumeChange: callAll(_onVolumeChange, onVolumeChange),
-      onWaiting: callAll(_onWaiting, onWaiting),
-      onLoadedMetadata: callAll(_onLoadedMetadata, onLoadedMetadata),
+      canplay: callAll(_onCanPlay, canplay),
+      durationchange: callAll(_onDurationChange, durationchange),
+      error: callAll(_onError, error),
+      pause: callAll(_onPause, pause),
+      play: callAll(_onPlay, play),
+      progress: callAll(_onProgress, progress),
+      ratechange: callAll(_onRateChange, ratechange),
+      seeked: callAll(_onSeeked, seeked),
+      seeking: callAll(_onSeeking, seeking),
+      timeupdate: callAll(_onTimeUpdate, timeupdate),
+      volumechange: callAll(_onVolumeChange, volumechange),
+      waiting: callAll(_onWaiting, waiting),
+      loadedmetadata: callAll(_onLoadedMetadata, loadedmetadata),
     }
 
     return mergedEventListeners
   }
 
-  useEffect(() => {
-    return () => {
-      remove(id)
-    }
-  }, [])
+  onUnmounted(() => {
+    remove(id)
+  })
 
   return {
     getMediaProps,

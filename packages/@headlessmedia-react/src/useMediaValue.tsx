@@ -1,9 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react'
-import { clamp } from '../utils'
-
-// import { MediaStatus } from '../constants'
-// import { callAll } from '../utils'
-import { pubsubs, MediaState } from '../MediaPubSub'
+import { clamp, mediaStore, MediaState } from '@headlessmedia/shared'
 
 type Selector = <T>(mediaState: MediaState) => T
 
@@ -27,7 +23,7 @@ export const useMediaValue = <T,>({
   id: string
   selector: (mediaState: MediaState) => T
 }): T & UseMediaValueUtils => {
-  const { subscribe, getState } = pubsubs
+  const { subscribe, getState } = mediaStore
   const [, forceUpdate] = useReducer((aha: number) => aha + 1, 0)
   const currentMediaRef = useRef(selector(getState(id) as MediaState))
   const getMedia = () => getState(id)?.mediaElement

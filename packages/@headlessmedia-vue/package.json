@@ -23,6 +23,7 @@
     "playground": "vite serve playground",
     "playground:build": "NODE_ENV=production vite build playground",
     "prepublishOnly": "npm run build",
+    "watch": "tsdx watch --name headlessmedia",
     "build": "../../scripts/build.sh",
     "test": "../../scripts/test.sh",
     "lint": "../../scripts/lint.sh"

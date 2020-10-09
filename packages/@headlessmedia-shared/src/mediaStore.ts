@@ -1,5 +1,6 @@
 import { BitrateInfo } from './types'
-import { DEFAULT_AUTO_BITRATE_INDEX, MediaStatus } from './constants'
+
+import { DEFAULT_AUTO_BITRATE_INDEX, MediaStatus } from './constant'
 
 export interface MediaState {
   mediaElement: HTMLMediaElement | null
@@ -24,7 +25,7 @@ export interface MediaState {
 
 type Subcriber = (mediaState: MediaState) => void
 
-const initialMediaState: MediaState = {
+export const initialMediaState: MediaState = {
   mediaElement: null,
   currentTime: 0,
   duration: 0,
@@ -43,12 +44,32 @@ const initialMediaState: MediaState = {
   currentBirateIndex: DEFAULT_AUTO_BITRATE_INDEX,
 }
 
-export const pubsubs = (() => {
+export const mediaStore = (() => {
   const channels = new Map<string, { state: MediaState; listeners: Set<Subcriber> }>()
 
   const createChannelIfNotAvailable = (channel: string) => {
     if (!channels.has(channel)) {
-      channels.set(channel, { state: initialMediaState, listeners: new Set() })
+      channels.set(channel, {
+        state: {
+          mediaElement: null,
+          currentTime: 0,
+          duration: 0,
+          ended: false,
+          error: '',
+          muted: false,
+          paused: true,
+          playbackRate: 1,
+          rotate: 0,
+          seeking: false,
+          status: MediaStatus.LOADING,
+          volume: 1,
+          buffered: null,
+          autoBitrateEnabled: true,
+          bitrateInfos: [],
+          currentBirateIndex: DEFAULT_AUTO_BITRATE_INDEX,
+        },
+        listeners: new Set(),
+      })
     }
   }
 
@@ -83,4 +104,3 @@ export const pubsubs = (() => {
     },
   }
 })()
-;(window as any).pubsubs = pubsubs
