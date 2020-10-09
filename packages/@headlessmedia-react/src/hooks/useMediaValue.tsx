@@ -1,8 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react'
-import { clamp } from '../utils'
+import { clamp } from '@headlessmedia/shared'
 
-// import { MediaStatus } from '../constants'
-// import { callAll } from '../utils'
 import { pubsubs, MediaState } from '../MediaPubSub'
 
 type Selector = <T>(mediaState: MediaState) => T

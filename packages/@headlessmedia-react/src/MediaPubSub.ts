@@ -83,4 +83,3 @@ export const pubsubs = (() => {
     },
   }
 })()
-;(window as any).pubsubs = pubsubs

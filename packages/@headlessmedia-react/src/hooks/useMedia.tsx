@@ -1,7 +1,7 @@
 import { MediaHTMLAttributes, SyntheticEvent, useEffect } from 'react'
+import { callAll } from '@headlessmedia/shared'
 
 import { MediaStatus } from '../constants'
-import { callAll } from '../utils'
 import { pubsubs } from '../MediaPubSub'
 
 export interface UseMediaArg {
