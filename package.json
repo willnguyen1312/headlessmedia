@@ -15,9 +15,9 @@
     "packages/*"
   ],
   "scripts": {
+    "shared": "yarn workspace @headlessmedia/shared",
     "react": "yarn workspace @headlessmedia/react",
     "vue": "yarn workspace @headlessmedia/vue",
-    "shared": "yarn workspace @headlessmedia/shared",
     "build": "yarn workspaces run build",
     "test": "./scripts/test.sh",
     "lint": "./scripts/lint.sh"
