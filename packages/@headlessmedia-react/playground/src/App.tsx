@@ -25,7 +25,6 @@ const Video = () => {
   const { getMediaProps } = useMedia({ id: mediaID })
   return (
     <video
-      onLoadedMetadata={event => {}}
       width={800}
       height={400}
       {...getMediaProps()}
