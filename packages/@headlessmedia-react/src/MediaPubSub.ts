@@ -44,12 +44,16 @@ const initialMediaState: MediaState = {
 export const pubsubs = (() => {
   const channels = new Map<string, { state: MediaState; listeners: Set<Subcriber> }>()
 
+  const createChannelIfNotAvailable = (channel: string) => {
+    if (!channels.has(channel)) {
+      channels.set(channel, { state: initialMediaState, listeners: new Set() })
+    }
+  }
+
   return {
     subscribe: (channel: string, listener: Subcriber) => {
       // Create the channel if not yet created
-      if (!channels.has(channel)) {
-        channels.set(channel, { state: initialMediaState, listeners: new Set() })
-      }
+      createChannelIfNotAvailable(channel)
 
       // Add the listener to queue
       channels.get(channel)?.listeners.add(listener)
@@ -62,11 +66,19 @@ export const pubsubs = (() => {
       }
     },
     update: (channel: string, partialMediaState: Partial<MediaState>) => {
+      createChannelIfNotAvailable(channel)
       const currentState = Object.assign(channels.get(channel)?.state, partialMediaState)
       channels.get(channel)?.listeners.forEach(channelListener => {
         channelListener(currentState)
       })
     },
-    getState: (channel: string) => channels.get(channel)?.state,
+    getState: (channel: string) => {
+      createChannelIfNotAvailable(channel)
+      return channels.get(channel)?.state
+    },
+    remove: (channel: string) => {
+      channels.delete(channel)
+    },
   }
 })()
+;(window as any).pubsubs = pubsubs
