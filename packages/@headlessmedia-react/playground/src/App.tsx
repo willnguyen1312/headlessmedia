@@ -4,11 +4,19 @@ import { useMedia, useMediaValue } from '@headlessmedia/react'
 const mediaID = 'tadatada'
 
 const Child = () => {
-  const { currentTime } = useMediaValue({
+  const { currentTime, setPaused, paused } = useMediaValue({
     id: mediaID,
     selector: mediaContext => mediaContext,
   })
-  return <h1>Current time: {currentTime}</h1>
+
+  return (
+    <div
+      style={{ display: 'flex', alignItems: 'center', width: 600, justifyContent: 'space-between' }}
+    >
+      <h1>Current time: {currentTime}</h1>
+      <button onClick={() => setPaused(!paused)}>{paused ? 'Play' : 'Pause'}</button>
+    </div>
+  )
 }
 
 const App = () => {
@@ -16,7 +24,7 @@ const App = () => {
   return (
     <div>
       <Child />
-      <h1>Hello World</h1>
+      <h1>Hello Media</h1>
       <video
         onLoadedMetadata={event => {}}
         width={800}

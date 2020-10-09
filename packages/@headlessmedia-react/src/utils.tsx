@@ -3,5 +3,5 @@ export const callAll = (...fns: any[]) => (...arg: any[]) => {
 }
 
 export const clamp = (value: number, lower: number, upper: number) => {
-  return Math.max(upper, Math.min(lower, value))
+  return Math.min(upper, Math.max(lower, value))
 }
