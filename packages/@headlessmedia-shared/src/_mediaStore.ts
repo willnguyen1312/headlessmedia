@@ -1,7 +1,7 @@
 import { BitrateInfo } from './types'
 
-// import { MediaStatus } from './constant'
 import { DEFAULT_AUTO_BITRATE_INDEX, MediaStatus } from './constant'
+
 export interface MediaState {
   mediaElement: HTMLMediaElement | null
   currentTime: number
@@ -44,7 +44,7 @@ export const initialMediaState: MediaState = {
   currentBirateIndex: DEFAULT_AUTO_BITRATE_INDEX,
 }
 
-export const pubsubs = (() => {
+export const mediaStore = (() => {
   const channels = new Map<string, { state: MediaState; listeners: Set<Subcriber> }>()
 
   const createChannelIfNotAvailable = (channel: string) => {
