@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react'
 
-import { callAll } from './utils'
+import { callAll } from '@headlessmedia/shared'
 import { MediaStatus } from './constants'
 
 export type MediaEventListener = (
