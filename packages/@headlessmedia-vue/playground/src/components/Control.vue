@@ -10,7 +10,6 @@ import { useMediaValue } from '@headlessmedia/vue'
 import { mediaId } from '../const'
 
 export default defineComponent({
-  name: 'Control',
   setup() {
     const { paused, setPaused, currentTime } = useMediaValue({ id: mediaId })
 

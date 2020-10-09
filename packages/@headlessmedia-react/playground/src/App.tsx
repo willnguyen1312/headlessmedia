@@ -1,8 +1,6 @@
 import React from 'react'
 import { useMedia, useMediaValue } from '@headlessmedia/react'
 
-import styles from './App.module.css'
-
 const mediaID = 'tadatada'
 
 const Control = () => {
@@ -14,10 +12,10 @@ const Control = () => {
   const togglePlay = () => setPaused(!paused)
 
   return (
-    <div className={styles.buttonWrapper}>
-      <h1>Current time: {currentTime}</h1>
+    <>
       <button onClick={togglePlay}>{paused ? 'Play' : 'Pause'}</button>
-    </div>
+      <h6>Current time: {currentTime}</h6>
+    </>
   )
 }
 
@@ -36,11 +34,10 @@ const Video = () => {
 
 const App = () => {
   return (
-    <div className={styles.wrapper}>
+    <>
       <Control />
-      <h1>Hello Media</h1>
       <Video />
-    </div>
+    </>
   )
 }
 

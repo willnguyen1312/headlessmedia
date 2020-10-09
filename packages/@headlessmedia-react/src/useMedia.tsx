@@ -1,8 +1,5 @@
 import { MediaHTMLAttributes, SyntheticEvent, useEffect } from 'react'
-import { callAll } from '@headlessmedia/shared'
-
-import { MediaStatus } from '../constants'
-import { pubsubs } from '../MediaPubSub'
+import { callAll, MediaStatus, mediaStore } from '@headlessmedia/shared'
 
 export interface UseMediaArg {
   id: string
@@ -27,7 +24,7 @@ export type MergedEventListeners = Record<MediaContextInternalEvents, ReturnType
 
 export const useMedia = ({ id }: UseMediaArg) => {
   let timeoutLoadingId: NodeJS.Timeout
-  const { update, remove, getState } = pubsubs
+  const { update, remove, getState } = mediaStore
   const getMedia = () => getState(id)?.mediaElement
 
   const _onLoadedMetadata = (event: SyntheticEvent<HTMLMediaElement, Event>) => {
