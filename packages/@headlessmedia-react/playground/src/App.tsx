@@ -18,11 +18,11 @@ const App = () => {
       <Child />
       <h1>Hello World</h1>
       <video
+        onLoadedMetadata={event => {}}
         width={800}
         height={400}
         {...getMediaProps()}
         controls
-        id={mediaID}
         src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
       />
     </div>

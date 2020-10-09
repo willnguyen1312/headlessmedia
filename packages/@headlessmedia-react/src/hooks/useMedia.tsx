@@ -1,4 +1,4 @@
-import { MediaHTMLAttributes, useEffect } from 'react'
+import { MediaHTMLAttributes, SyntheticEvent, useEffect } from 'react'
 
 import { MediaStatus } from '../constants'
 import { callAll } from '../utils'
@@ -20,54 +20,57 @@ type MediaContextInternalEvents =
   | 'onTimeUpdate'
   | 'onProgress'
   | 'onDurationChange'
+  | 'onLoadedMetadata'
   | 'onError'
 
 export type MergedEventListeners = Record<MediaContextInternalEvents, ReturnType<typeof callAll>>
 
-const getMedia = (id: string): HTMLMediaElement => {
-  const media = document.getElementById(id)
-  if (!media) {
-    throw new Error('Media element is not available')
-  }
-
-  return media as HTMLMediaElement
-}
-
 export const useMedia = ({ id }: UseMediaArg) => {
   let timeoutLoadingId: NodeJS.Timeout
-  const { update, remove } = pubsubs
+  const { update, remove, getState } = pubsubs
+  const getMedia = () => getState(id)?.mediaElement
+
+  const _onLoadedMetadata = (event: SyntheticEvent<HTMLMediaElement, Event>) => {
+    const mediaElement = event.target as HTMLMediaElement
+    update(id, { mediaElement })
+  }
+
   const _onSeeked = () => update(id, { seeking: false })
 
   const _onError = () => update(id, { status: MediaStatus.ERROR })
 
-  const _onTimeUpdate = () => update(id, { currentTime: getMedia(id).currentTime })
+  const _onTimeUpdate = () => update(id, { currentTime: getMedia()?.currentTime })
 
-  const _onRateChange = () => update(id, { playbackRate: getMedia(id).playbackRate })
+  const _onRateChange = () => update(id, { playbackRate: getMedia()?.playbackRate })
 
-  const _onPause = () => update(id, { paused: true, ended: getMedia(id).ended })
+  const _onPause = () => update(id, { paused: true, ended: getMedia()?.ended })
 
-  const _onPlay = () => update(id, { paused: false, ended: getMedia(id).ended })
+  const _onPlay = () => update(id, { paused: false, ended: getMedia()?.ended })
 
-  const _onDurationChange = () => update(id, { duration: getMedia(id).duration })
+  const _onDurationChange = () => update(id, { duration: getMedia()?.duration })
 
   const checkMediaHasDataToPlay = () => {
-    const media = getMedia(id)
-    const { currentTime } = media
+    const media = getMedia()
+    if (media) {
+      const { currentTime } = media
 
-    const timeRanges = Array.from({ length: media.buffered.length }, (_, index) => {
-      const start = media.buffered.start(index)
-      const end = media.buffered.end(index)
-      return [Math.floor(start), end]
-    })
+      const timeRanges = Array.from({ length: media.buffered.length }, (_, index) => {
+        const start = media.buffered.start(index)
+        const end = media.buffered.end(index)
+        return [Math.floor(start), end]
+      })
 
-    // Detect whether timeRanges has data to play at current time of media element
-    const result = timeRanges.some(timeRange => {
-      const [start, end] = timeRange
+      // Detect whether timeRanges has data to play at current time of media element
+      const result = timeRanges.some(timeRange => {
+        const [start, end] = timeRange
 
-      return currentTime >= start && currentTime <= end
-    })
+        return currentTime >= start && currentTime <= end
+      })
 
-    return result
+      return result
+    }
+
+    return false
   }
 
   const setLoadingStatus = () => {
@@ -87,28 +90,25 @@ export const useMedia = ({ id }: UseMediaArg) => {
   }
 
   const _onSeeking = () => {
-    const media = getMedia(id)
     update(id, {
       seeking: true,
-      currentTime: media.currentTime,
-      ended: media.ended,
+      currentTime: getMedia()?.currentTime,
+      ended: getMedia()?.ended,
     })
+
     if (!checkMediaHasDataToPlay()) {
       setLoadingStatus()
     }
   }
 
-  const _onVolumeChange = () => {
-    const media = getMedia(id)
-    update(id, { muted: media.muted, volume: media.volume })
-  }
+  const _onVolumeChange = () => update(id, { muted: getMedia()?.muted, volume: getMedia()?.volume })
 
   const _onCanPlay = () => setCanPlayStatus()
   const _onProgress = () => {
     if (checkMediaHasDataToPlay()) {
       setCanPlayStatus()
     }
-    update(id, { buffered: getMedia(id).buffered })
+    update(id, { buffered: getMedia()?.buffered })
   }
 
   const _onWaiting = () => {
@@ -132,7 +132,8 @@ export const useMedia = ({ id }: UseMediaArg) => {
     onTimeUpdate,
     onVolumeChange,
     onWaiting,
-  }: MediaHTMLAttributes<HTMLVideoElement> = {}) => {
+    onLoadedMetadata,
+  }: MediaHTMLAttributes<HTMLMediaElement> = {}) => {
     const mergedEventListeners: MergedEventListeners = {
       onCanPlay: callAll(_onCanPlay, onCanPlay),
       onDurationChange: callAll(_onDurationChange, onDurationChange),
@@ -146,6 +147,7 @@ export const useMedia = ({ id }: UseMediaArg) => {
       onTimeUpdate: callAll(_onTimeUpdate, onTimeUpdate),
       onVolumeChange: callAll(_onVolumeChange, onVolumeChange),
       onWaiting: callAll(_onWaiting, onWaiting),
+      onLoadedMetadata: callAll(_onLoadedMetadata, onLoadedMetadata),
     }
 
     return mergedEventListeners

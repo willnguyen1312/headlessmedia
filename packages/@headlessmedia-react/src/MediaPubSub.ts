@@ -2,6 +2,7 @@ import { BitrateInfo } from './types'
 import { DEFAULT_AUTO_BITRATE_INDEX, MediaStatus } from './constants'
 
 export interface MediaState {
+  mediaElement: HTMLMediaElement | null
   currentTime: number
   seeking: boolean
   duration: number
@@ -24,6 +25,7 @@ export interface MediaState {
 type Subcriber = (mediaState: MediaState) => void
 
 const initialMediaState: MediaState = {
+  mediaElement: null,
   currentTime: 0,
   duration: 0,
   ended: false,
