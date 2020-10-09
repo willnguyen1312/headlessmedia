@@ -26,7 +26,8 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "noImplicitAny": true
   },
   "exclude": ["node_modules", "dist"]
 }
