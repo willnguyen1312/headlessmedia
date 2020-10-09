@@ -1,7 +1,6 @@
 <template>
   <button @click="handleClick">{{ buttonText }}</button>
   <h6>Current time: {{ currentTime }}</h6>
-  <h6>Paused: {{ paused }}</h6>
 </template>
 
 <script lang="ts">
@@ -23,5 +22,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped></style>

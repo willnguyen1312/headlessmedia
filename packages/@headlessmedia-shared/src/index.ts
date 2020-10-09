@@ -1,2 +1,4 @@
 export * from './constant'
-export * from './_mediaStore'
+export * from './mediaStore'
+export * from './types'
+export * from './utils'

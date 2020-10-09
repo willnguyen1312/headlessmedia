@@ -1,9 +1,6 @@
 import { onUnmounted } from 'vue'
 
-import { callAll } from '@headlessmedia/shared'
-
-import { MediaStatus } from '../constant'
-import { pubsubs } from '../MediaStore'
+import { callAll, MediaStatus, mediaStore } from '@headlessmedia/shared'
 
 const noop = () => {}
 
@@ -30,7 +27,7 @@ export type MergedEventListeners = Record<MediaContextInternalEvents, ReturnType
 
 export const useMedia = ({ id }: UseMediaArg) => {
   let timeoutLoadingId: NodeJS.Timeout
-  const { update, remove, getState } = pubsubs
+  const { update, remove, getState } = mediaStore
   const getMedia = () => getState(id)?.mediaElement
 
   const _onLoadedMetadata = (event: Event) => {

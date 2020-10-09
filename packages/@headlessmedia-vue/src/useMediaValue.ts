@@ -1,7 +1,5 @@
-import { ref, reactive, toRefs } from 'vue'
-import { clamp } from '@headlessmedia/shared'
-
-import { pubsubs, initialMediaState } from '../MediaStore'
+import { reactive, toRefs, onUnmounted } from 'vue'
+import { clamp, mediaStore, initialMediaState } from '@headlessmedia/shared'
 
 export interface UseMediaValueArg {
   id: string
@@ -16,25 +14,20 @@ export interface UseMediaValueUtils {
 }
 
 export const useMediaValue = ({ id }: { id: string }) => {
-  const { getState, subscribe } = pubsubs
-  const getMedia = () => getState(id)?.mediaElement
   const currentMediaState = reactive(initialMediaState)
-  const pausedRef = ref<boolean>(true)
-  const playPromiseRef = ref<Promise<void>>()
+  const { getState, subscribe } = mediaStore
+  const getMedia = () => getState(id)?.mediaElement
+  let paused = true
+  let playPromise: null | Promise<void> = null
 
-  subscribe(id, latestState => {
+  const { unsubscribe } = subscribe(id, latestState => {
     Object.keys(latestState).forEach(key => {
-      // @ts-ignore
-      // if (key === 'paused') {
-      //   console.log(latestState.paused)
-      // }
-
       // @ts-ignore
       currentMediaState[key] = latestState[key]
     })
-
-    // console.log(currentMediaState.paused)
   })
+
+  onUnmounted(unsubscribe)
 
   const setCurrentTime = (currentTime: number) => {
     const media = getMedia()
@@ -70,20 +63,19 @@ export const useMediaValue = ({ id }: { id: string }) => {
 
   // We need this special handler to handle play/pause methods across browsers
   // https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
-  const setPaused = async (paused: boolean) => {
+  const setPaused = async (newPaused: boolean) => {
     const media = getMedia()
     if (media) {
       // We need to store the latest paused state in ref for later access
-      pausedRef.value = paused
+      paused = newPaused
 
       if (paused) {
-        const playPromise = playPromiseRef.value
         if (playPromise) {
           await playPromise
 
-          playPromiseRef.value = undefined
+          playPromise = null
           // Check the latest paused state
-          if (pausedRef.value) {
+          if (paused) {
             media.pause()
           }
         } else {
@@ -92,18 +84,13 @@ export const useMediaValue = ({ id }: { id: string }) => {
         }
       } else {
         // Modern browser return a promise, undefined in IE
-        playPromiseRef.value = media.play()
+        playPromise = media.play()
       }
     }
   }
 
   return {
-    // ...toRefs(currentMediaState),
-    // mediaState: toRefs(currentMediaState),
-    // paused,
     ...toRefs(currentMediaState),
-
-    // Utils
     setCurrentTime,
     setMuted,
     setPaused,
