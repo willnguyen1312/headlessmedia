@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useMedia, useMediaValue } from '@headlessmedia/react'
+import { videoSources } from '@headlessmedia/shared'
 
 const mediaID = 'tadatada'
 
@@ -21,22 +22,46 @@ const Control = () => {
 
 const Video = () => {
   const { getMediaProps } = useMedia({ id: mediaID })
+  const [src, setSrc] = useState(videoSources[0])
   return (
-    <video
-      width={800}
-      height={400}
-      {...getMediaProps()}
-      controls
-      src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-    />
+    <>
+      <select
+        onChange={event => {
+          setSrc(event.target.value)
+        }}
+        value={src}
+      >
+        {videoSources.map(videoSrc => {
+          return (
+            <option key={videoSrc} value={videoSrc}>
+              {videoSrc}
+            </option>
+          )
+        })}
+      </select>
+      <video
+        style={{ display: 'block' }}
+        width={800}
+        height={400}
+        {...getMediaProps()}
+        controls
+        src={src}
+      />
+    </>
   )
 }
 
 const App = () => {
+  const [show, setShow] = React.useState(true)
   return (
     <>
-      <Control />
-      <Video />
+      <button onClick={() => setShow(!show)}>{show ? 'Hide' : 'Show'}</button>
+      {show ? (
+        <>
+          <Control />
+          <Video />
+        </>
+      ) : null}
     </>
   )
 }
