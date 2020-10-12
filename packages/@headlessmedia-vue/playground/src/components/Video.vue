@@ -1,25 +1,26 @@
 <template>
-  <video
-    width="800"
-    height="400"
-    controls
-    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-    v-on="mediaEventHanlders"
-  />
+  <select v-model="selectedVideoSource">
+    <option v-for="videoSource in videoSources" :key="videoSource">
+      {{ videoSource }}
+    </option>
+  </select>
+  <video width="800" height="400" controls :src="selectedVideoSource" v-on="mediaEventHanlders" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useMedia } from '@headlessmedia/vue'
+import { videoSources } from '@headlessmedia/shared'
 
 import { mediaId } from '../const'
 
 export default defineComponent({
   setup() {
+    const selectedVideoSource = ref<string>(videoSources[0])
     const { getMediaProps } = useMedia({ id: mediaId })
     const mediaEventHanlders = getMediaProps()
 
-    return { mediaEventHanlders }
+    return { mediaEventHanlders, selectedVideoSource, videoSources }
   },
 })
 </script>
