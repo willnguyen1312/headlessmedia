@@ -1,5 +1,3 @@
-export const DEFAULT_AUTO_BITRATE_INDEX = -1
-
 export enum MediaStatus {
   LOADING = 'LOADING',
   CAN_PLAY = 'CAN_PLAY',

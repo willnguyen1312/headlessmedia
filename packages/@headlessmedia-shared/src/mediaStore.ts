@@ -1,6 +1,6 @@
-import { BitrateInfo } from './types'
+import { TrackInfo } from './types'
 
-import { DEFAULT_AUTO_BITRATE_INDEX, MediaStatus } from './constant'
+import { MediaStatus } from './constant'
 
 export interface MediaState {
   mediaElement: HTMLMediaElement | null
@@ -18,9 +18,9 @@ export interface MediaState {
   buffered: TimeRanges | null
 
   // Streaming properties
-  autoBitrateEnabled: boolean
-  bitrateInfos: BitrateInfo[]
-  currentBirateIndex: number
+  adaptiveStreamEnable: boolean
+  trackInfo: TrackInfo[]
+  currentTrackId: number
 }
 
 type Subcriber = (mediaState: MediaState) => void
@@ -39,9 +39,9 @@ export const makeInitialMediaState = (): MediaState => ({
   status: MediaStatus.LOADING,
   volume: 1,
   buffered: null,
-  autoBitrateEnabled: true,
-  bitrateInfos: [],
-  currentBirateIndex: DEFAULT_AUTO_BITRATE_INDEX,
+  adaptiveStreamEnable: true,
+  trackInfo: [],
+  currentTrackId: -1,
 })
 
 export const mediaStore = (() => {

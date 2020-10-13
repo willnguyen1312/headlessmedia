@@ -1,4 +1,4 @@
-import { BitrateInfo } from './types'
+import { TrackInfo } from './types'
 import { MediaStatus } from './constant'
 import { mediaStore } from './mediaStore'
 
@@ -16,7 +16,7 @@ export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) 
 
   const onAdaptation = () => {
     const variantTracks = shakaPlayer.getVariantTracks()
-    const bitrateInfos: BitrateInfo[] = variantTracks.map((track: any) => ({
+    const bitrateInfos: TrackInfo[] = variantTracks.map((track: any) => ({
       width: track.width,
       height: track.height,
       bitrate: track.bandwidth,
