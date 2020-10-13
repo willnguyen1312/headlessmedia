@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react'
-import { makeMediaUtils, mediaStore, MediaState } from '@headlessmedia/shared'
+import { makeMediaUtils, mediaStore, MediaState, MediaValueUtils } from '@headlessmedia/shared'
 
 type Selector = <T>(mediaState: MediaState) => T
 
@@ -8,21 +8,13 @@ export interface UseMediaValueArg {
   selector: Selector
 }
 
-export interface UseMediaValueUtils {
-  setCurrentTime: (currentTime: number) => void
-  setPlaybackRate: (playbackRate: number) => void
-  setVolume: (volume: number) => void
-  setPaused: (paused: boolean) => void
-  setMuted: (muted: boolean) => void
-}
-
 export const useMediaValue = <T,>({
   id,
   selector,
 }: {
   id: string
   selector: (mediaState: MediaState) => T
-}): T & UseMediaValueUtils => {
+}): T & MediaValueUtils => {
   const { subscribe, getState } = mediaStore
   const [, forceUpdate] = useReducer((aha: number) => aha + 1, 0)
   const currentMediaRef = useRef(selector(getState(id) as MediaState))
