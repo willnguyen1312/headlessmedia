@@ -2,7 +2,7 @@
 import { h, Fragment } from 'preact'
 import { useState } from 'preact/hooks'
 import { useMedia, useMediaValue } from '@headlessmedia/preact'
-import { videoSources } from '@headlessmedia/shared'
+import { mediaSources } from '@headlessmedia/shared'
 
 const mediaID = 'tadatada'
 
@@ -23,8 +23,8 @@ const Control = () => {
 }
 
 const Video = () => {
-  const { getMediaProps } = useMedia({ id: mediaID })
-  const [src, setSrc] = useState(videoSources[0])
+  const [src, setSrc] = useState(mediaSources[0])
+  const { getMediaProps } = useMedia({ id: mediaID, mediaSource: src })
   return (
     <>
       <select
@@ -33,7 +33,7 @@ const Video = () => {
         }}
         value={src}
       >
-        {videoSources.map(videoSrc => {
+        {mediaSources.map(videoSrc => {
           return (
             <option key={videoSrc} value={videoSrc}>
               {videoSrc}
@@ -42,12 +42,12 @@ const Video = () => {
         })}
       </select>
       <video
+        id={mediaID}
         style={{ display: 'block' }}
         width={800}
         height={400}
         {...getMediaProps()}
         controls
-        src={src}
       />
     </>
   )

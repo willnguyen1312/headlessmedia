@@ -28,7 +28,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "skipDefaultLibCheck": true,
-    "noImplicitAny": true
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules"]
 }

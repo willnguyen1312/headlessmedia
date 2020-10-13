@@ -1,11 +1,59 @@
+import { Track } from './types'
 import { MediaStatus } from './constant'
 import { mediaStore } from './mediaStore'
 
-export const makeMediaHandlers = ({ id }: { id: string }) => {
-  let timeoutLoadingId: NodeJS.Timeout
-  const { update, remove } = mediaStore
+export interface MediaHandlersArg {
+  id: string
+  mediaSource?: string
+  shaka?: any
+}
 
-  const handleLoadedMetadata = (event: Event) => {
+let shakaPolyfilled = false
+
+export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) => {
+  let shakaPlayer: any
+  const { update, remove, getState } = mediaStore
+
+  const onAdaptation = () => {
+    const tracks = shakaPlayer.getVariantTracks() as Track[]
+    update(id, { tracks })
+  }
+
+  const onVariantChanged = () => {
+    const tracks = shakaPlayer.getVariantTracks() as Track[]
+    for (let iterator = 0; iterator < tracks.length; iterator++) {
+      if (tracks[iterator].active) {
+        update(id, { currentTrackId: tracks[iterator].id })
+        break
+      }
+    }
+  }
+
+  if (shaka && mediaSource) {
+    const mediaElement = document.getElementById(id)
+    if (!shakaPolyfilled) {
+      shaka.polyfill.installAll()
+      shakaPolyfilled = true
+    }
+
+    shakaPlayer = new shaka.Player(mediaElement)
+
+    // Try to load a manifest.
+    // This is an asynchronous process.
+    shakaPlayer.load(mediaSource)
+
+    // This is for bitrate change due to ABR
+    shakaPlayer.addEventListener('adaptation', onAdaptation)
+
+    //This is for bitrate change made by user
+    shakaPlayer.addEventListener('variantchanged', onVariantChanged)
+
+    update(id, { shakaPlayer })
+  }
+
+  let timeoutLoadingId: NodeJS.Timeout
+
+  const handleLoadedMetadata = async (event: Event) => {
     const mediaElement = event.target as HTMLMediaElement
     update(id, { mediaElement })
   }

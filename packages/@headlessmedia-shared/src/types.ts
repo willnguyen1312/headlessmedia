@@ -1,5 +1,29 @@
-export interface BitrateInfo {
-  bitrate: number
-  width: number
-  height: number
+export interface Track {
+  id: number
+  active: boolean
+  type: string
+  bandwidth: number
+  language: string
+  label?: string
+  kind?: string
+  width?: number
+  height?: number
+  frameRate?: number
+  pixelAspectRatio?: string
+  mimeType?: string
+  codecs?: string
+  audioCodec?: string
+  videoCodec?: string
+  primary: boolean
+  roles: string[]
+  audioRoles: Array<string>
+  videoId?: number
+  audioId?: number
+  channelsCount?: number
+  audioSamplingRate?: number
+  audioBandwidth?: number
+  videoBandwidth?: number
+  originalVideoId?: string
+  originalAudioId?: string
+  originalTextId?: string
 }

@@ -7,11 +7,13 @@ export interface MediaValueUtils {
   setVolume: (volume: number) => void
   setPaused: (paused: boolean) => void
   setMuted: (muted: boolean) => void
+  setTrack: (trackId: number) => void
 }
 
 export const makeMediaUtils = ({ id }: { id: string }): MediaValueUtils => {
   const { getState } = mediaStore
   const getMedia = () => getState(id)?.mediaElement
+  const getShakaPlayer = () => getState(id)?.shakaPlayer
   let paused = true
   let lastPlayPromise: null | Promise<void> = null
 
@@ -76,7 +78,24 @@ export const makeMediaUtils = ({ id }: { id: string }): MediaValueUtils => {
     }
   }
 
+  const setTrack = (trackId: number | undefined) => {
+    const shakaPlayer = getShakaPlayer()
+    if (!shakaPlayer) {
+      return
+    }
+
+    if (!trackId) {
+      shakaPlayer.configure({ abr: { enabled: true } })
+      return
+    }
+    const track = getState(id).trackInfo.find(track => track.id === trackId)
+    if (track) {
+      shakaPlayer.selectVariantTrack()
+    }
+  }
+
   return {
+    setTrack,
     setCurrentTime,
     setMuted,
     setPaused,
