@@ -1,11 +1,70 @@
+import { BitrateInfo } from './types'
 import { MediaStatus } from './constant'
 import { mediaStore } from './mediaStore'
 
-export const makeMediaHandlers = ({ id }: { id: string }) => {
-  let timeoutLoadingId: NodeJS.Timeout
+export interface MediaHandlersArg {
+  id: string
+  mediaSource?: string
+  shaka?: any
+}
+
+let shakaPolyfilled = false
+let shakaPlayer: any
+
+export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) => {
   const { update, remove } = mediaStore
 
-  const handleLoadedMetadata = (event: Event) => {
+  const onAdaptation = () => {
+    const variantTracks = shakaPlayer.getVariantTracks()
+    const bitrateInfos: BitrateInfo[] = variantTracks.map((track: any) => ({
+      width: track.width,
+      height: track.height,
+      bitrate: track.bandwidth,
+    }))
+
+    update(id, { bitrateInfos })
+  }
+
+  const onVariantChanged = () => {
+    const tracks = shakaPlayer.getVariantTracks()
+    for (let iterator = 0; iterator < tracks.length; iterator++) {
+      if (tracks[iterator].active) {
+        console.log('Bandwidth: ' + tracks[iterator].bandwidth)
+        break
+      }
+    }
+  }
+
+  if (shaka && mediaSource) {
+    const mediaElement = document.getElementById(id)
+    if (!shakaPolyfilled) {
+      shaka.polyfill.installAll()
+      shakaPolyfilled = true
+    }
+
+    if (!shakaPlayer) {
+      shakaPlayer = new shaka.Player(mediaElement)
+    } else {
+      shakaPlayer.unload()
+    }
+
+    // Try to load a manifest.
+    // This is an asynchronous process.
+    shakaPlayer.load(mediaSource)
+
+    // This is for bitrate change due to ABR
+    shakaPlayer.addEventListener('adaptation', onAdaptation)
+
+    //This is for bitrate change made by user
+    shakaPlayer.addEventListener('variantchanged', onVariantChanged)
+
+    // Attach player to the window to make it easy to access in the JS console.
+    ;(window as any).shakaPlayer = shakaPlayer
+  }
+
+  let timeoutLoadingId: NodeJS.Timeout
+
+  const handleLoadedMetadata = async (event: Event) => {
     const mediaElement = event.target as HTMLMediaElement
     update(id, { mediaElement })
   }

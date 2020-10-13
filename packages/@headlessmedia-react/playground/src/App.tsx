@@ -20,9 +20,14 @@ const Control = () => {
   )
 }
 
+const mediaSources = [
+  'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
+  'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
+]
+
 const Video = () => {
-  const { getMediaProps } = useMedia({ id: mediaID })
-  const [src, setSrc] = useState(videoSources[0])
+  const [src, setSrc] = useState(mediaSources[0])
+  const { getMediaProps } = useMedia({ id: mediaID, mediaSource: src })
   return (
     <>
       <select
@@ -31,7 +36,7 @@ const Video = () => {
         }}
         value={src}
       >
-        {videoSources.map(videoSrc => {
+        {mediaSources.map(videoSrc => {
           return (
             <option key={videoSrc} value={videoSrc}>
               {videoSrc}
@@ -40,12 +45,12 @@ const Video = () => {
         })}
       </select>
       <video
+        id={mediaID}
         style={{ display: 'block' }}
         width={800}
         height={400}
         {...getMediaProps()}
         controls
-        src={src}
       />
     </>
   )
