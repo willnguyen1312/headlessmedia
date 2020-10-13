@@ -1,0 +1,41 @@
+{
+  "name": "@headlessmedia/preact",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/headlessmedia.esm.js",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willnguyen1312/headlessmedia.git",
+    "directory": "packages/@headlessmedia-preact"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "playground": "vite serve playground",
+    "playground:build": "NODE_ENV=production vite build playground",
+    "prepublishOnly": "npm run build",
+    "build": "../../scripts/build.sh",
+    "watch": "tsdx watch --name headlessmedia",
+    "test": "../../scripts/test.sh",
+    "lint": "../../scripts/lint.sh"
+  },
+  "dependencies": {
+    "preact": "^10.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "typescript": "^3.9.3",
+    "vite": "^1.0.0-rc.1",
+    "@prefresh/vite": "^1.1.4"
+  }
+}

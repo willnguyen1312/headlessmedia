@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "shared": "yarn workspace @headlessmedia/shared",
+    "preact": "yarn workspace @headlessmedia/preact",
     "react": "yarn workspace @headlessmedia/react",
     "vue": "yarn workspace @headlessmedia/vue",
     "build": "yarn workspaces run build",
