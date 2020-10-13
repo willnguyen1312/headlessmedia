@@ -18,6 +18,7 @@ export interface MediaState {
   buffered: TimeRanges | null
 
   // Streaming properties
+  shakaPlayer: any
   adaptiveStreamEnable: boolean
   trackInfo: TrackInfo[]
   currentTrackId: number
@@ -42,6 +43,7 @@ export const makeInitialMediaState = (): MediaState => ({
   adaptiveStreamEnable: true,
   trackInfo: [],
   currentTrackId: -1,
+  shakaPlayer: null,
 })
 
 export const mediaStore = (() => {

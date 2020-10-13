@@ -1,4 +1,4 @@
-import { TrackInfo } from './types'
+import { TrackInfo, Track } from './types'
 import { MediaStatus } from './constant'
 import { mediaStore } from './mediaStore'
 
@@ -12,24 +12,27 @@ let shakaPolyfilled = false
 
 export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) => {
   let shakaPlayer: any
-  const { update, remove } = mediaStore
+  const { update, remove, getState } = mediaStore
 
   const onAdaptation = () => {
     const variantTracks = shakaPlayer.getVariantTracks()
-    const bitrateInfos: TrackInfo[] = variantTracks.map((track: any) => ({
-      width: track.width,
-      height: track.height,
-      bitrate: track.bandwidth,
-    }))
-
-    update(id, { bitrateInfos })
+    const trackInfo: TrackInfo[] = variantTracks.map(
+      (track: Track) =>
+        ({
+          width: track.width,
+          height: track.height,
+          bandwidth: track.bandwidth,
+          id: track.id,
+        } as TrackInfo)
+    )
+    update(id, { trackInfo })
   }
 
   const onVariantChanged = () => {
-    const tracks = shakaPlayer.getVariantTracks()
+    const tracks = shakaPlayer.getVariantTracks() as Track[]
     for (let iterator = 0; iterator < tracks.length; iterator++) {
       if (tracks[iterator].active) {
-        console.log('Bandwidth: ' + tracks[iterator].bandwidth)
+        update(id, { currentTrackId: tracks[iterator].id })
         break
       }
     }
@@ -54,8 +57,7 @@ export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) 
     //This is for bitrate change made by user
     shakaPlayer.addEventListener('variantchanged', onVariantChanged)
 
-    // Attach player to the window to make it easy to access in the JS console.
-    ;(window as any).shakaPlayer = shakaPlayer
+    update(id, { shakaPlayer })
   }
 
   let timeoutLoadingId: NodeJS.Timeout

@@ -1,6 +1,14 @@
 export interface TrackInfo {
   id: number
-  bitrate: number
+  bandwidth: number
   width: number
   height: number
+}
+
+export interface Track {
+  height: number
+  width: number
+  bandwidth: number
+  id: number
+  active: boolean
 }
