@@ -29,7 +29,8 @@
     "lint": "../../scripts/lint.sh"
   },
   "dependencies": {
-    "preact": "^10.4.1"
+    "preact": "^10.4.1",
+    "shaka-player": "^3.0.4"
   },
   "devDependencies": {
     "@types/react": "^16.9.35",

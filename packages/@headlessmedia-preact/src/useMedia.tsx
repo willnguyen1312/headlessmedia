@@ -1,9 +1,5 @@
-import { useEffect } from 'preact/hooks'
-import { callAll, makeMediaHandlers } from '@headlessmedia/shared'
-
-export interface UseMediaArg {
-  id: string
-}
+import { useEffect, useRef, useReducer } from 'preact/hooks'
+import { callAll, makeMediaHandlers, MediaHandlersArg } from '@headlessmedia/shared'
 
 type MediaEventHandler = (event: React.SyntheticEvent<HTMLMediaElement, Event>) => void
 type MergedEventListeners = Record<keyof GetMediaPropsArg, ReturnType<typeof callAll>>
@@ -24,12 +20,36 @@ interface GetMediaPropsArg {
   onLoadedMetadata?: MediaEventHandler
 }
 
-export const useMedia = ({ id }: UseMediaArg) => {
-  const mediaHandlers = makeMediaHandlers({ id })
+export const useMedia = ({ id, mediaSource }: MediaHandlersArg) => {
+  const [s, forceUpdate] = useReducer((s: number) => s + 1, 0)
+  const mediaHandlersRef = useRef<any>()
+  const shakaRef = useRef<any>()
 
   useEffect(() => {
-    return mediaHandlers.cleanup
-  }, [])
+    const loadShaka = async () => {
+      const { default: loadedShaka } = await import('shaka-player')
+      shakaRef.current = loadedShaka
+      const mediaHandlers = makeMediaHandlers({ id, mediaSource, shaka: shakaRef.current })
+      mediaHandlersRef.current = mediaHandlers
+      forceUpdate(s + 1)
+    }
+
+    if (mediaSource) {
+      if (!shakaRef.current) {
+        loadShaka()
+      } else {
+        const mediaHandlers = makeMediaHandlers({ id, mediaSource, shaka: shakaRef.current })
+        mediaHandlersRef.current = mediaHandlers
+        forceUpdate(s + 1)
+      }
+    }
+
+    return () => {
+      if (!mediaHandlersRef.current) {
+        mediaHandlersRef.current.cleanup()
+      }
+    }
+  }, [mediaSource])
 
   const getMediaProps = ({
     onCanPlay,
@@ -46,6 +66,10 @@ export const useMedia = ({ id }: UseMediaArg) => {
     onWaiting,
     onLoadedMetadata,
   }: GetMediaPropsArg = {}) => {
+    if (!mediaHandlersRef.current) {
+      return
+    }
+    const mediaHandlers = mediaHandlersRef.current
     const mergedEventListeners: MergedEventListeners = {
       onCanPlay: callAll(mediaHandlers.handleCanPlay, onCanPlay),
       onDurationChange: callAll(mediaHandlers.handleDurationChange, onDurationChange),
