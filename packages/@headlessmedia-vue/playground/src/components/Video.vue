@@ -11,12 +11,12 @@
     height="400"
     controls
     :src="selectedMediaSource"
-    v-on="mediaEventHanlders"
+    v-on="getMediaProps()"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useMedia } from '@headlessmedia/vue'
 import { mediaSources } from '@headlessmedia/shared'
 
@@ -25,18 +25,13 @@ import { mediaId } from '../const'
 export default defineComponent({
   setup() {
     const selectedMediaSource = ref<string>(mediaSources[0])
-    const mediaEventHanlders = ref<object>({})
 
     const { getMediaProps } = useMedia({
       id: mediaId,
       mediaSource: selectedMediaSource,
     })
 
-    watchEffect(() => {
-      mediaEventHanlders.value = getMediaProps.value()
-    })
-
-    return { mediaEventHanlders, selectedMediaSource, mediaSources, mediaId }
+    return { getMediaProps, selectedMediaSource, mediaSources, mediaId }
   },
 })
 </script>

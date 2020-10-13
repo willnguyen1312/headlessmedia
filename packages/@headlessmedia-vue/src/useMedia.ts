@@ -1,4 +1,4 @@
-import { onUnmounted, ref, watchEffect } from 'vue'
+import { onUnmounted, ref, watchEffect, Ref } from 'vue'
 
 import { callAll, makeMediaHandlers } from '@headlessmedia/shared'
 
@@ -21,9 +21,11 @@ interface GetMediaPropsArg {
   loadedmetadata?: MediaEventHandler
 }
 
-export const useMedia = ({ id, mediaSource }: any) => {
-  let mediaHandlers = ref<any>(null)
-  let getMediaProps = ref<any>(() => {})
+type GetMediaProps = (arg?: GetMediaPropsArg) => MergedEventListeners | void
+
+export const useMedia = ({ id, mediaSource }: { id: string; mediaSource: Ref<string> }) => {
+  let mediaHandlers = ref<ReturnType<typeof makeMediaHandlers>>({} as any)
+  let getMediaProps = ref<GetMediaProps>(() => {})
   let shaka: any
 
   const loadShaka = async (mediaSourceValue: string) => {

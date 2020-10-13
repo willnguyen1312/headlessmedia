@@ -22,7 +22,7 @@ interface GetMediaPropsArg {
 
 export const useMedia = ({ id, mediaSource }: MediaHandlersArg) => {
   const [s, forceUpdate] = useReducer((s: number) => s + 1, 0)
-  const mediaHandlersRef = useRef<any>()
+  const mediaHandlersRef = useRef<ReturnType<typeof makeMediaHandlers>>()
   const shakaRef = useRef<any>()
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export const useMedia = ({ id, mediaSource }: MediaHandlersArg) => {
     }
 
     return () => {
-      if (!mediaHandlersRef.current) {
+      if (mediaHandlersRef.current) {
         mediaHandlersRef.current.cleanup()
       }
     }
