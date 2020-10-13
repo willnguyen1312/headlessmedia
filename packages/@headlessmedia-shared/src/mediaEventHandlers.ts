@@ -9,9 +9,9 @@ export interface MediaHandlersArg {
 }
 
 let shakaPolyfilled = false
-let shakaPlayer: any
 
 export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) => {
+  let shakaPlayer: any
   const { update, remove } = mediaStore
 
   const onAdaptation = () => {
@@ -42,11 +42,7 @@ export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) 
       shakaPolyfilled = true
     }
 
-    if (!shakaPlayer) {
-      shakaPlayer = new shaka.Player(mediaElement)
-    } else {
-      shakaPlayer.unload()
-    }
+    const shakaPlayer = new shaka.Player(mediaElement)
 
     // Try to load a manifest.
     // This is an asynchronous process.
