@@ -1,4 +1,4 @@
-import { TrackInfo, Track } from './types'
+import { Track } from './types'
 import { MediaStatus } from './constant'
 import { mediaStore } from './mediaStore'
 
@@ -15,17 +15,8 @@ export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) 
   const { update, remove, getState } = mediaStore
 
   const onAdaptation = () => {
-    const variantTracks = shakaPlayer.getVariantTracks()
-    const trackInfo: TrackInfo[] = variantTracks.map(
-      (track: Track) =>
-        ({
-          width: track.width,
-          height: track.height,
-          bandwidth: track.bandwidth,
-          id: track.id,
-        } as TrackInfo)
-    )
-    update(id, { trackInfo })
+    const tracks = shakaPlayer.getVariantTracks() as Track[]
+    update(id, { tracks })
   }
 
   const onVariantChanged = () => {
@@ -45,7 +36,7 @@ export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) 
       shakaPolyfilled = true
     }
 
-    const shakaPlayer = new shaka.Player(mediaElement)
+    shakaPlayer = new shaka.Player(mediaElement)
 
     // Try to load a manifest.
     // This is an asynchronous process.

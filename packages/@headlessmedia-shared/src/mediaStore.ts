@@ -1,4 +1,4 @@
-import { TrackInfo } from './types'
+import { Track } from './types'
 
 import { MediaStatus } from './constant'
 
@@ -20,7 +20,7 @@ export interface MediaState {
   // Streaming properties
   shakaPlayer: any
   adaptiveStreamEnable: boolean
-  trackInfo: TrackInfo[]
+  tracks: Track[]
   currentTrackId: number
 }
 
@@ -41,7 +41,7 @@ export const makeInitialMediaState = (): MediaState => ({
   volume: 1,
   buffered: null,
   adaptiveStreamEnable: true,
-  trackInfo: [],
+  tracks: [],
   currentTrackId: -1,
   shakaPlayer: null,
 })
