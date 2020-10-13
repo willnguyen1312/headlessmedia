@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useReducer } from 'react'
 import { callAll, makeMediaHandlers, MediaHandlersArg } from '@headlessmedia/shared'
 
 type MediaEventHandler = (event: React.SyntheticEvent<HTMLMediaElement, Event>) => void
@@ -21,6 +21,7 @@ interface GetMediaPropsArg {
 }
 
 export const useMedia = ({ id, mediaSource }: MediaHandlersArg) => {
+  const [, forceUpdate] = useReducer((s: number) => s + 1, 0)
   const mediaHandlersRef = useRef<any>()
   const shakaRef = useRef<any>()
 
@@ -30,6 +31,7 @@ export const useMedia = ({ id, mediaSource }: MediaHandlersArg) => {
       shakaRef.current = loadedShaka
       const mediaHandlers = makeMediaHandlers({ id, mediaSource, shaka: shakaRef.current })
       mediaHandlersRef.current = mediaHandlers
+      forceUpdate()
     }
 
     if (mediaSource) {
@@ -38,6 +40,7 @@ export const useMedia = ({ id, mediaSource }: MediaHandlersArg) => {
       } else {
         const mediaHandlers = makeMediaHandlers({ id, mediaSource, shaka: shakaRef.current })
         mediaHandlersRef.current = mediaHandlers
+        forceUpdate()
       }
     }
 

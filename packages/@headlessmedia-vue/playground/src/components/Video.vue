@@ -1,26 +1,50 @@
 <template>
-  <select v-model="selectedVideoSource">
-    <option v-for="videoSource in videoSources" :key="videoSource">
-      {{ videoSource }}
+  <select v-model="selectedMediaSource">
+    <option v-for="mediaSource in mediaSources" :key="mediaSource">
+      {{ mediaSource }}
     </option>
   </select>
-  <video width="800" height="400" controls :src="selectedVideoSource" v-on="mediaEventHanlders" />
+  <video
+    style="display: block;"
+    :id="mediaId"
+    width="800"
+    height="400"
+    controls
+    :src="selectedMediaSource"
+    v-on="mediaEventHanlders"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watchEffect } from 'vue'
 import { useMedia } from '@headlessmedia/vue'
-import { videoSources } from '@headlessmedia/shared'
+import { mediaSources } from '@headlessmedia/shared'
 
 import { mediaId } from '../const'
 
 export default defineComponent({
   setup() {
-    const selectedVideoSource = ref<string>(videoSources[0])
-    const { getMediaProps } = useMedia({ id: mediaId })
-    const mediaEventHanlders = getMediaProps()
+    const selectedMediaSource = ref<string>(mediaSources[0])
+    const mediaEventHanlders = ref<object>({})
 
-    return { mediaEventHanlders, selectedVideoSource, videoSources }
+    const { getMediaProps } = useMedia({
+      id: mediaId,
+      mediaSource: selectedMediaSource,
+    })
+
+    watchEffect(() => {
+      mediaEventHanlders.value = getMediaProps.value()
+    })
+
+    return { mediaEventHanlders, selectedMediaSource, mediaSources, mediaId }
   },
 })
 </script>
+
+<style scoped>
+.wrapper {
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+}
+</style>

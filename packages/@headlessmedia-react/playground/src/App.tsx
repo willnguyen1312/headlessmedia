@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useMedia, useMediaValue } from '@headlessmedia/react'
-import { videoSources } from '@headlessmedia/shared'
+import { mediaSources } from '@headlessmedia/shared'
 
 const mediaID = 'tadatada'
 
@@ -19,11 +19,6 @@ const Control = () => {
     </>
   )
 }
-
-const mediaSources = [
-  'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
-  'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
-]
 
 const Video = () => {
   const [src, setSrc] = useState(mediaSources[0])
