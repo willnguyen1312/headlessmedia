@@ -29,15 +29,8 @@ export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) 
     }
   }
 
-  if (shaka && mediaSource) {
-    const mediaElement = document.getElementById(id)
-    if (!shakaPolyfilled) {
-      shaka.polyfill.installAll()
-      shakaPolyfilled = true
-    }
-
+  const initShakaPlayer = (mediaElement: HTMLMediaElement) => {
     shakaPlayer = new shaka.Player(mediaElement)
-
     // Try to load a manifest.
     // This is an asynchronous process.
     shakaPlayer.load(mediaSource)
@@ -49,6 +42,22 @@ export const makeMediaHandlers = ({ id, mediaSource, shaka }: MediaHandlersArg) 
     shakaPlayer.addEventListener('variantchanged', onVariantChanged)
 
     update(id, { shakaPlayer })
+  }
+
+  if (shaka && mediaSource) {
+    const mediaElement = document.getElementById(id) as HTMLMediaElement
+    if (!shakaPolyfilled) {
+      shaka.polyfill.installAll()
+      shakaPolyfilled = true
+    }
+
+    if (shakaPlayer) {
+      shakaPlayer.destroy().then(() => {
+        initShakaPlayer(mediaElement)
+      })
+    } else {
+      initShakaPlayer(mediaElement)
+    }
   }
 
   let timeoutLoadingId: NodeJS.Timeout
