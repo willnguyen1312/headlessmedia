@@ -5,10 +5,8 @@
     </option>
   </select>
   <video
-    style="display: block;"
+    style="display: block; width: 800; max-width: 100%;"
     :id="mediaId"
-    width="800"
-    height="400"
     controls
     :src="selectedMediaSource"
     v-on="getMediaProps()"

@@ -41,9 +41,7 @@ const Video = () => {
       </select>
       <video
         id={mediaID}
-        style={{ display: 'block' }}
-        width={800}
-        height={400}
+        style={{ display: 'block', width: 800, maxWidth: '100%' }}
         {...getMediaProps()}
         controls
       />
