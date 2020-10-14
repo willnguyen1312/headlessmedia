@@ -42,6 +42,7 @@
     "vue:build": "yarn vue build",
     "vue:build:playground": "yarn vue playground:build",
     "build": "yarn workspaces run build",
+    "typecheck": "yarn workspaces run typecheck",
     "test": "./scripts/test.sh",
     "lint": "./scripts/lint.sh"
   },

@@ -25,6 +25,7 @@
     "prepublishOnly": "npm run build",
     "build": "../../scripts/build.sh",
     "watch": "tsdx watch --name headlessmedia",
+    "typecheck": "tsc --project ./tsconfig.tsdx.json",
     "test": "../../scripts/test.sh",
     "lint": "../../scripts/lint.sh"
   },

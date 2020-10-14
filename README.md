@@ -31,6 +31,12 @@ yarn <framework>:lint
 <!-- Lint All -->
 yarn lint
 
+<!-- Typecheck Command -->
+yarn <framework>:typecheck
+
+<!-- Typecheck All -->
+yarn typecheck
+
 <!-- Test Command -->
 yarn <framework>:test
 
