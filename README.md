@@ -1,5 +1,5 @@
 <h3 align="center">
-  Headless Media libraries for various frameworks like React and Vue
+  Headless media libraries designed for UI frameworks
 </h3>
 
 ## Packages
