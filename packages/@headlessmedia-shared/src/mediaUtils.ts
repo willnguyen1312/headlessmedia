@@ -88,7 +88,7 @@ export const makeMediaUtils = ({ id }: { id: string }): MediaValueUtils => {
       shakaPlayer.configure({ abr: { enabled: true } })
       return
     }
-    const track = getState(id).trackInfo.find(track => track.id === trackId)
+    const track = getState(id).tracks.find(track => track.id === trackId)
     if (track) {
       shakaPlayer.selectVariantTrack()
     }

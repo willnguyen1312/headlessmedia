@@ -42,6 +42,7 @@
     "vue:build": "yarn vue build",
     "vue:build:playground": "yarn vue playground:build",
     "build": "yarn workspaces run build",
+    "typecheck": "yarn workspaces run typecheck",
     "test": "./scripts/test.sh",
     "lint": "./scripts/lint.sh"
   },
@@ -51,7 +52,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "tsdx lint --fix"
+    "*.{js,jsx,ts,tsx}": "yarn lint && yarn typecheck"
   },
   "prettier": {
     "printWidth": 100,

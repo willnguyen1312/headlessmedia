@@ -21,6 +21,7 @@
   },
   "scripts": {
     "watch": "tsdx watch --name headlessmedia",
+    "typecheck": "tsc --project ./tsconfig.tsdx.json",
     "build": "../../scripts/build.sh",
     "test": "../../scripts/test.sh",
     "lint": "../../scripts/lint.sh"
