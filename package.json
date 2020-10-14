@@ -52,7 +52,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "tsdx lint --fix"
+    "*.{js,jsx,ts,tsx}": "yarn lint && yarn typecheck"
   },
   "prettier": {
     "printWidth": 100,
