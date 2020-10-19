@@ -43,13 +43,15 @@ export const useMedia = ({ id, mediaSource }: MediaHandlersArg) => {
         forceUpdate()
       }
     }
+  }, [mediaSource])
 
+  useEffect(() => {
     return () => {
       if (mediaHandlersRef.current) {
         mediaHandlersRef.current.cleanup()
       }
     }
-  }, [mediaSource])
+  }, [])
 
   const getMediaProps = ({
     onCanPlay,
