@@ -19,6 +19,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "lodash.isequal": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/lodash.isequal": "^4.5.5"
+  },
   "scripts": {
     "watch": "tsdx watch --name headlessmedia",
     "typecheck": "tsc --project ./tsconfig.tsdx.json",
