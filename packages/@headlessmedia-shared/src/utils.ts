@@ -5,3 +5,5 @@ export const callAll = (...fns: any[]) => (...arg: any[]) => {
 export const clamp = (value: number, lower: number, upper: number) => {
   return Math.min(upper, Math.max(lower, value))
 }
+
+export const identity = (value: any) => value

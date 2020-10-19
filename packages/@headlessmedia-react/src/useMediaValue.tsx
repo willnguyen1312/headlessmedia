@@ -1,5 +1,12 @@
 import { useEffect, useReducer, useRef } from 'react'
-import { makeMediaUtils, mediaStore, MediaState, MediaValueUtils } from '@headlessmedia/shared'
+import {
+  makeMediaUtils,
+  mediaStore,
+  MediaState,
+  MediaValueUtils,
+  identity,
+  isEqual,
+} from '@headlessmedia/shared'
 
 type Selector = <T>(mediaState: MediaState) => T
 
@@ -10,22 +17,29 @@ export interface UseMediaValueArg {
 
 export const useMediaValue = <T,>({
   id,
-  selector,
+  selector = identity,
 }: {
   id: string
   selector: (mediaState: MediaState) => T
 }): T & MediaValueUtils => {
   const { subscribe, getState } = mediaStore
   const [, forceUpdate] = useReducer((aha: number) => aha + 1, 0)
-  const currentMediaRef = useRef(selector(getState(id) as MediaState))
+  const currentMediaRef = useRef(selector && selector(getState(id) as MediaState))
   const mediaUtils = makeMediaUtils({ id })
 
   useEffect(() => {
-    const { unsubscribe } = subscribe(id, mediaState => {
+    const { unsubscribe } = subscribe(id, (mediaState: MediaState) => {
       const newCurrentMediaState = selector(mediaState)
-      currentMediaRef.current = newCurrentMediaState
+      if (selector === identity) {
+        currentMediaRef.current = newCurrentMediaState
+        forceUpdate()
+        return
+      }
 
-      forceUpdate()
+      if (!isEqual(newCurrentMediaState, currentMediaRef.current)) {
+        currentMediaRef.current = newCurrentMediaState
+        forceUpdate()
+      }
     })
 
     return unsubscribe
