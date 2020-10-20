@@ -51,6 +51,8 @@ yarn test
 - [x] [Vue] support
 - [x] [HLS] support
 - [x] [DASH] support
+- [ ] [ScreenCaptureAPI] support
+- [ ] [WebRTC] support
 - [ ] API doc
 - [ ] Architecture doc
 - [ ] Add code examples
@@ -65,3 +67,5 @@ yarn test
 [vue]: https://v3.vuejs.org/
 [hls]: https://en.wikipedia.org/wiki/HTTP_Live_Streaming
 [dash]: https://en.wikipedia.org/wiki/Dash
+[screencaptureapi]: https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API
+[webrtc]: https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
