@@ -58,6 +58,14 @@ yarn test
 - [ ] Add code examples
 - [ ] Release v1
 
+## Credits
+
+The implementation of this project is inspired by the following prior art in the JavaScript ecosystem:
+
+- [React Player](https://github.com/cookpete/react-player)
+- [Video React](https://github.com/video-react/video-react)
+- [Shaka Player](https://github.com/google/shaka-player)
+
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
