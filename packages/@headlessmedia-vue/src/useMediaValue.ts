@@ -1,5 +1,5 @@
 import { reactive, toRefs, onUnmounted } from 'vue'
-import { makeMediaUtils, mediaStore, makeInitialMediaState } from '@headlessmedia/shared'
+import { makeMediaUtils, mediaStore, makeInitialMediaState } from 'headlessmedia-shared'
 
 export interface UseMediaValueArg {
   id: string

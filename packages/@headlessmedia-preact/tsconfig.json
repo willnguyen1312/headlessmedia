@@ -1,14 +1,8 @@
 {
-  "include": [
-    "src",
-    "types"
-  ],
+  "include": ["src", "types"],
   "compilerOptions": {
     "module": "esnext",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
+    "lib": ["dom", "esnext"],
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
@@ -21,13 +15,8 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@headlessmedia/react": [
-        "src"
-      ],
-      "*": [
-        "src/*",
-        "node_modules/*"
-      ]
+      "headlessmedia-react": ["src"],
+      "*": ["src/*", "node_modules/*"]
     },
     "esModuleInterop": true,
     "target": "es5",
@@ -42,7 +31,5 @@
     "jsx": "preserve",
     "jsxFactory": "h"
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

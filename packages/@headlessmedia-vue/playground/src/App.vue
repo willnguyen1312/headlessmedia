@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { useMedia } from '@headlessmedia/vue'
+import { useMedia } from 'headlessmedia-vue'
 
 import Control from './components/Control.vue'
 import Video from './components/Video.vue'

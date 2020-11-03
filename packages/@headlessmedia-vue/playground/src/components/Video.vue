@@ -15,8 +15,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { useMedia } from '@headlessmedia/vue'
-import { mediaSources } from '@headlessmedia/shared'
+import { useMedia } from 'headlessmedia-vue'
+import { mediaSources } from 'headlessmedia-shared'
 
 import { mediaId } from '../const'
 

@@ -15,7 +15,7 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@headlessmedia/vue": ["src"],
+      "headlessmedia-vue": ["src"],
       "*": ["src/*", "node_modules/*"]
     },
     "esModuleInterop": true,

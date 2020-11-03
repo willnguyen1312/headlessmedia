@@ -15,7 +15,7 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@headlessmedia/react": ["src"],
+      "headlessmedia-react": ["src"],
       "*": ["src/*", "node_modules/*"]
     },
     "jsx": "preserve",

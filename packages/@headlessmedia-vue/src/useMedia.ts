@@ -1,6 +1,6 @@
 import { onUnmounted, ref, watchEffect, Ref } from 'vue'
 
-import { callAll, makeMediaHandlers } from '@headlessmedia/shared'
+import { callAll, makeMediaHandlers } from 'headlessmedia-shared'
 
 type MediaEventHandler = (event: HTMLMediaElement) => void
 export type MergedEventListeners = Record<keyof GetMediaPropsArg, ReturnType<typeof callAll>>

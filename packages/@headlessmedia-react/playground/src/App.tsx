@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useMedia, useMediaValue } from '@headlessmedia/react'
-import { mediaSources } from '@headlessmedia/shared'
+import { useMedia, useMediaValue } from 'headlessmedia-react'
+import { mediaSources } from 'headlessmedia-shared'
 
 const mediaID = 'tadatada'
 

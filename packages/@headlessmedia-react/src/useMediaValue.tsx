@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react'
-import { makeMediaUtils, mediaStore, MediaState, isEqual } from '@headlessmedia/shared'
+import { makeMediaUtils, mediaStore, MediaState, isEqual } from 'headlessmedia-shared'
 
 type Selector = <T>(mediaState: MediaState) => T
 

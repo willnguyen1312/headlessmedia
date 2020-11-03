@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { useMediaValue } from '@headlessmedia/vue'
+import { useMediaValue } from 'headlessmedia-vue'
 
 import { mediaId } from '../const'
 

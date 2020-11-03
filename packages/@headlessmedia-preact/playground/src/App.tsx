@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { h, Fragment } from 'preact'
 import { useState } from 'preact/hooks'
-import { useMedia, useMediaValue } from '@headlessmedia/preact'
-import { mediaSources } from '@headlessmedia/shared'
+import { useMedia, useMediaValue } from 'headlessmedia-preact'
+import { mediaSources } from 'headlessmedia-shared'
 
 const mediaID = 'tadatada'
 

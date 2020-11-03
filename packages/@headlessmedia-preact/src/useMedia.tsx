@@ -1,5 +1,5 @@
 import { useEffect, useRef, useReducer } from 'preact/hooks'
-import { callAll, makeMediaHandlers, MediaHandlersArg } from '@headlessmedia/shared'
+import { callAll, makeMediaHandlers, MediaHandlersArg } from 'headlessmedia-shared'
 
 type MediaEventHandler = (event: React.SyntheticEvent<HTMLMediaElement, Event>) => void
 type MergedEventListeners = Record<keyof GetMediaPropsArg, ReturnType<typeof callAll>>
