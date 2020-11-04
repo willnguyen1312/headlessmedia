@@ -49,6 +49,7 @@ yarn test
 - [x] [Preact] support
 - [x] [React] support
 - [x] [Vue] support
+- [x] [MediaElement] support
 - [x] [HLS] support
 - [x] [DASH] support
 - [ ] [ScreenCaptureAPI] support
@@ -77,3 +78,4 @@ The implementation of this project is inspired by the following prior art in the
 [dash]: https://en.wikipedia.org/wiki/Dash
 [screencaptureapi]: https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API
 [webrtc]: https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
+[mediaelement]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
